@@ -42,6 +42,14 @@ class GameGUI:
                     elif self.game[i][j] == 1:
                         self.pos_jugador = (i, j)
                         self.screen.blit(self.green_yoshi, (j * 100, i * 100))
+                    elif self.game[i][j] == 2:
+                        self.screen.blit(self.red_yoshi, (j * 100, i * 100))
+                    elif self.game[i][j] == 2:
+                        self.screen.blit(self.red_yoshi, (j * 100, i * 100))
+                    elif self.game[i][j] == 3:
+                        self.screen.blit(self.green_tile, (j * 100, i * 100))
+                    elif self.game[i][j] == 4:
+                        self.screen.blit(self.red_tile, (j * 100, i * 100))
             
             # Obtener movimientos posibles
             posible_moves = self.get_posible_moves()
@@ -68,9 +76,5 @@ class GameGUI:
                         if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
                             pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 0) * 100 + 50 , ((self.pos_jugador[0] - 0) * 100) +50), 20)
                             pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 0) * 100 + 150 , ((self.pos_jugador[0] - 0) * 100) +50), 20)
-                            
-                        
-                
             pygame.display.flip()
             time.sleep(0.1)
-
