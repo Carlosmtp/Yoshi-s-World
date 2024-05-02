@@ -45,15 +45,16 @@ class GUI:
         self.master.withdraw()
         tablero_inicial = [[0, 0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 2, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 1, 0, 0, 0, 0, 0, 0],
+                           [0, 0, 0, 1, 0, 0, 0, 0],
+                           [0, 0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0]]
         game = GameGUI(tablero_inicial)
         game.draw_board()
         self.master.deiconify()
+        
         
 def main():
     root = tk.Tk()
