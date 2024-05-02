@@ -15,6 +15,7 @@ class GameGUI:
         self.screen.fill((255, 255, 255))
         self.pos_jugador = None
         self.game = game
+        self.current_cursor = None
 
     def get_posible_moves(self):
         posible_moves = []
@@ -23,7 +24,7 @@ class GameGUI:
             moves = [(i+2, j+1), (i+2, j-1), (i-2, j+1), (i-2, j-1),
                      (i+1, j+2), (i+1, j-2), (i-1, j+2), (i-1, j-2)]
             for move in moves:
-                if 0 <= move[0] < 8 and 0 <= move[1] < 8:
+                if 0 <= move[0] < 8 and 0 <= move[1] < 8 and self.game[move[0]][move[1]] == 0:
                     posible_moves.append(move)
         return posible_moves
     
@@ -62,19 +63,18 @@ class GameGUI:
                     pygame.draw.circle(self.screen, (0, 255, 0), ((move[1] * 100) + 50, (move[0] * 100) + 50), 20)
                     if move[0] < self.pos_jugador[0]:
                         if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
-                            pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 1) * 100 + 50 , (self.pos_jugador[1] * 100) +50), 20)
-                            pygame.draw.circle(self.screen, (0, 255, 0), (self.pos_jugador[0] * 100 - 50 , ((self.pos_jugador[0] - 2) * 100) + 50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), ((self.pos_jugador[0] - 1) * 100 + 50 , (self.pos_jugador[1] * 100) +50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), (self.pos_jugador[0] * 100 - 50 , ((self.pos_jugador[0] - 2) * 100) + 50), 20)
                     elif move[0] > self.pos_jugador[0]:
                         if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
-                            pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 1) * 100 + 50 , ((self.pos_jugador[0] - 1) * 100) + 250), 20)
-                            pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 1) * 100 + 50 , ((self.pos_jugador[0] + 2) * 100) + 50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), ((self.pos_jugador[0] - 1) * 100 + 50 , ((self.pos_jugador[0] - 1) * 100) + 250), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), ((self.pos_jugador[0] - 1) * 100 + 50 , ((self.pos_jugador[0] + 2) * 100) + 50), 20)
                     if move[1] < self.pos_jugador[1]:
                         if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
-                            pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 2) * 100 + 50 , (self.pos_jugador[0] * 100) +50), 20)
-                            pygame.draw.circle(self.screen, (0, 255, 50), (self.pos_jugador[0] * 100 - 250 , (self.pos_jugador[0] * 100) + 50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), ((self.pos_jugador[0] - 2) * 100 + 50 , (self.pos_jugador[0] * 100) +50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), (self.pos_jugador[0] * 100 - 250 , (self.pos_jugador[0] * 100) + 50), 20)
                     elif move[1] > self.pos_jugador[1]:
                         if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
-                            pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 0) * 100 + 50 , ((self.pos_jugador[0] - 0) * 100) +50), 20)
-                            pygame.draw.circle(self.screen, (0, 255, 0), ((self.pos_jugador[0] - 0) * 100 + 150 , ((self.pos_jugador[0] - 0) * 100) +50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), ((self.pos_jugador[0] - 0) * 100 + 50 , ((self.pos_jugador[0] - 0) * 100) +50), 20)
+                            pygame.draw.circle(self.screen, (182, 182, 182), ((self.pos_jugador[0] - 0) * 100 + 150 , ((self.pos_jugador[0] - 0) * 100) +50), 20)
             pygame.display.flip()
-            time.sleep(0.1)
