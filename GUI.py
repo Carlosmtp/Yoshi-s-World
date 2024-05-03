@@ -52,6 +52,7 @@ class GUI:
                            [0, 0, 0, 0, 0, 0, 0, 0],
                            [0, 0, 0, 0, 0, 0, 0, 0]]
         game = GameGUI(tablero_inicial)
+        self.master.withdraw()
         game.draw_board()
         self.master.deiconify()
         
