@@ -18,6 +18,8 @@ class GameGUI:
         self.pos_enemigo = None
         self.game = game
         self.current_cursor = None
+        text_font = pygame.font.Font(None, 60)
+        self.title = text_font.render("¡No hay movimientos posibles!", True, (255, 255, 0))
         
             
     def get_posible_moves(self):
@@ -72,24 +74,27 @@ class GameGUI:
             
             # Dibujar movimientos posibles si el mouse está sobre ellos
             mouse_pos = pygame.mouse.get_pos()
+            if posible_moves == []:
+                pygame.draw.rect(self.screen, (0, 0, 0), (self.screen.get_width() // 2 - self.title.get_width() // 2 - 10, self.screen.get_height() // 2 - self.title.get_height() // 2 - 10, self.title.get_width() + 20, self.title.get_height() + 20))
+                self.screen.blit(self.title, (self.screen.get_width() // 2 - self.title.get_width() // 2, self.screen.get_height() // 2 - self.title.get_height() // 2))
             for move in posible_moves:
                 move_rect = pygame.Rect(move[1] * 100, move[0] * 100, 100, 100)
                 if move_rect.collidepoint(mouse_pos):
                     self.screen.blit(self.brush_tile, (move[1] * 100, move[0] * 100))
                     if move[0] < self.pos_jugador[0]:
                         if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
-                            self.screen.blit(self.way_tile, (self.pos_jugador[1] * 100, (self.pos_jugador[0] - 1) * 100))
-                            self.screen.blit(self.way_tile, (self.pos_jugador[1] * 100, (self.pos_jugador[0] - 2) * 100))
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 100 + 50, (self.pos_jugador[0] - 1) * 100 + 50), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 100 + 50, (self.pos_jugador[0] - 2) * 100 + 50), 20)
                     elif move[0] > self.pos_jugador[0]:
                         if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
-                            self.screen.blit(self.way_tile, (self.pos_jugador[1] * 100, (self.pos_jugador[0] + 1) * 100))
-                            self.screen.blit(self.way_tile, (self.pos_jugador[1] * 100, (self.pos_jugador[0] + 2) * 100))
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 100 + 50, (self.pos_jugador[0] + 1) * 100 + 50), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 100 + 50, (self.pos_jugador[0] + 2) * 100 + 50), 20)
                     if move[1] < self.pos_jugador[1]:
                         if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
-                            self.screen.blit(self.way_tile, ((self.pos_jugador[1] - 1) * 100, self.pos_jugador[0] * 100))
-                            self.screen.blit(self.way_tile, ((self.pos_jugador[1] - 2) * 100, self.pos_jugador[0] * 100))
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] - 1) * 100 + 50, self.pos_jugador[0] * 100 + 50), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] - 2) * 100 + 50, self.pos_jugador[0] * 100 + 50), 20)
                     elif move[1] > self.pos_jugador[1]:
                         if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
-                            self.screen.blit(self.way_tile, ((self.pos_jugador[1] + 1) * 100, self.pos_jugador[0] * 100))
-                            self.screen.blit(self.way_tile, ((self.pos_jugador[1] + 2) * 100, self.pos_jugador[0] * 100))
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 1) * 100 + 50, self.pos_jugador[0] * 100 + 50), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 2) * 100 + 50, self.pos_jugador[0] * 100 + 50), 20)
             pygame.display.flip()
