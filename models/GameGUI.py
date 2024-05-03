@@ -1,9 +1,8 @@
 import pygame
 import os
-import time
 
 class GameGUI:
-    def __init__(self, game):
+    def __init__(self, game=None):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.init()
         self.empty = pygame.transform.scale(pygame.image.load('images/empty_tile.png'), (100, 100))
@@ -16,9 +15,11 @@ class GameGUI:
         self.screen = pygame.display.set_mode((800, 800))
         self.screen.fill((255, 255, 255))
         self.pos_jugador = None
+        self.pos_enemigo = None
         self.game = game
         self.current_cursor = None
-
+        
+            
     def get_posible_moves(self):
         posible_moves = []
         if self.pos_jugador is not None:
@@ -32,7 +33,6 @@ class GameGUI:
     
     def draw_board(self):
         while True:
-            mouse_cursor = pygame.SYSTEM_CURSOR_ARROW
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -58,6 +58,7 @@ class GameGUI:
                         self.pos_jugador = (i, j)
                         self.screen.blit(self.green_yoshi, (j * 100, i * 100))
                     elif self.game[i][j] == 2:
+                        self.pos_enemigo = (i, j)
                         self.screen.blit(self.red_yoshi, (j * 100, i * 100))
                     elif self.game[i][j] == 2:
                         self.screen.blit(self.red_yoshi, (j * 100, i * 100))

@@ -1,6 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 from models.GameGUI import GameGUI
+from models.Game import Game
 
 class GUI:
     def __init__(self, master):
@@ -43,15 +44,8 @@ class GUI:
         
     def play_game(self):
         self.master.withdraw()
-        tablero_inicial = [[0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 4, 3, 2, 0],
-                           [0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 1, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0, 0],
-                           [0, 0, 0, 0, 0, 0, 0, 0]]
-        game = GameGUI(tablero_inicial)
+        game = Game()
+        game = GameGUI(game.world)
         self.master.withdraw()
         game.draw_board()
         self.master.deiconify()
