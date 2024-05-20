@@ -59,7 +59,7 @@ class GameGUI:
                         break
                 if event.type == pygame.MOUSEBUTTONUP:
                     if not self.is_player_turn:
-                        time.sleep(0.5)
+                        time.sleep(2)
                         self.move_enemy_gui()
                         break
 
@@ -118,8 +118,10 @@ class GameGUI:
             self.screen.blit((pygame.transform.scale(pygame.image.load('images/green_yoshi.png'), (30, 30))), (700, 256))
             self.screen.blit((pygame.transform.scale(pygame.image.load('images/red_yoshi.png'), (30, 30))), (1010, 256))
             if self.is_player_turn:
+                pygame.draw.rect(self.screen, (0,255,0), (680,180,230,130), 5)
                 self.screen.blit(self.turn_text, (700, 200))
             else:
+                pygame.draw.rect(self.screen, (255,0,0), (980,180,230,130), 5)
                 self.screen.blit(self.turn_text, (1000, 200))
             self.screen.blit(self.player_score, (740, 260))
             self.screen.blit(self.enemy_score, (1050, 260))
