@@ -1,6 +1,7 @@
 import pygame
 import os
 import time
+from models.Game import Game
 
 class GameGUI:
     def __init__(self, game=None, difficulty=None):
@@ -21,12 +22,19 @@ class GameGUI:
         self.game = game
         self.current_cursor = None
         self.text_font = pygame.font.Font(None, 40)
+        self.small_font = pygame.font.Font(None, 30)
         self.difficulty = self.text_font.render("Dificultad: " + difficulty, True, (255, 255, 255))
         self.turn_text = self.text_font.render("Jugando...", True, (255, 255, 255))
         self.status = self.text_font.render("¡No hay movimientos posibles!", True, (255, 255, 255))
         self.player_score = self.text_font.render("Jugador: 0", True, (255, 255, 255))
         self.enemy_score = self.text_font.render("Enemigo: 0", True, (255, 255, 255))
-        self.restart = self.text_font.render("Reiniciar", True, (255, 255, 255))
+        self.restart_button = pygame.Rect(700, 550, 230, 50)
+        self.restart_button_new = pygame.Rect(980, 550, 230, 50)
+        self.restart = self.text_font.render("Reiniciar:", True, (255, 255, 255))
+        self.restart_button_color = (155, 196, 188)
+        self.restart_button_new_color = (155, 196, 188)
+        self.restart_button_text = self.small_font.render("mismas posiciones", True, (0, 0, 0))
+        self.restart_button_new_game = self.small_font.render("nuevas posiciones", True, (0, 0, 0))
         self.is_player_turn = True  # Booleano para controlar el turno
 
     def move_player_gui(self, move):
@@ -54,7 +62,15 @@ class GameGUI:
                     pygame.quit()
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if self.is_player_turn:
+                    if self.restart_button.collidepoint(event.pos):
+                        self.game = Game(self.game.difficulty, self.game.initial_player_pos, self.game.initial_enemy_pos)
+                        self.is_player_turn = True
+                        break
+                    elif self.restart_button_new.collidepoint(event.pos):
+                        self.game = Game(self.game.difficulty)
+                        self.is_player_turn = True
+                        break
+                    elif self.is_player_turn:
                         self.move_player_gui(self.current_cursor)
                         break
                 if event.type == pygame.MOUSEBUTTONUP:
@@ -62,6 +78,16 @@ class GameGUI:
                         time.sleep(2)
                         self.move_enemy_gui()
                         break
+                if event.type == pygame.MOUSEMOTION:
+                    if self.restart_button.collidepoint(event.pos):
+                        self.restart_button_color = (211, 255, 233)
+                    else:
+                        self.restart_button_color = (155, 196, 188)
+                    if self.restart_button_new.collidepoint(event.pos):
+                        self.restart_button_new_color = (211, 255, 233)
+                    else:
+                        self.restart_button_new_color = (155, 196, 188)
+                    
 
             self.screen.fill((255, 255, 255))
             for i in range(8):
@@ -125,5 +151,9 @@ class GameGUI:
                 self.screen.blit(self.turn_text, (1000, 200))
             self.screen.blit(self.player_score, (740, 260))
             self.screen.blit(self.enemy_score, (1050, 260))
-            self.screen.blit(self.restart, (700, 550))
+            self.screen.blit(self.restart, (700, 500))
+            pygame.draw.rect(self.screen, self.restart_button_color, (700, 550, 230, 50))
+            self.screen.blit(self.restart_button_text, (710, 565))
+            pygame.draw.rect(self.screen, self.restart_button_new_color, (980, 550, 230, 50))
+            self.screen.blit(self.restart_button_new_game, (990, 565))
             pygame.display.flip()

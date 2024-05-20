@@ -1,11 +1,19 @@
 import random
 
 class Game:
-    def __init__(self, difficulty):
+    def __init__(self, difficulty, initial_player_pos=None, initial_enemy_pos=None):
         self.difficulty = difficulty
         self.world = [[0] * 8 for _ in range(8)]
-        self.player_pos = random.randrange(8), random.randrange(8)
-        self.enemy_pos = random.randrange(8), random.randrange(8)
+        if initial_player_pos is not None:
+            self.initial_player_pos = initial_player_pos
+        else:
+            self.initial_player_pos = random.randrange(8), random.randrange(8)
+        if initial_enemy_pos is not None:
+            self.initial_enemy_pos = initial_enemy_pos
+        else:
+            self.initial_enemy_pos = random.randrange(8), random.randrange(8)
+        self.player_pos = self.initial_player_pos
+        self.enemy_pos = self.initial_enemy_pos
         self.player_score = 0
         self.enemy_score = 0    
         while self.player_pos == self.enemy_pos:
