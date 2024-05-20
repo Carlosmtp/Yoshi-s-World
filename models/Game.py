@@ -5,7 +5,9 @@ class Game:
         self.difficulty = difficulty
         self.world = [[0] * 8 for _ in range(8)]
         self.player_pos = random.randrange(8), random.randrange(8)
-        self.enemy_pos = random.randrange(8), random.randrange(8)       
+        self.enemy_pos = random.randrange(8), random.randrange(8)
+        self.player_score = 0
+        self.enemy_score = 0    
         while self.player_pos == self.enemy_pos:
             self.enemy_pos = random.randrange(8), random.randrange(8)
         for i in range(8):
@@ -16,6 +18,11 @@ class Game:
                     self.world[i][j] = 2
                 else:
                     self.world[i][j] = 0
+                    
+                    
+    def update_scores(self):
+        self.player_score = sum(row.count(3) for row in self.world) + sum(row.count(1) for row in self.world)
+        self.enemy_score = sum(row.count(4) for row in self.world) + sum(row.count(2) for row in self.world)
                     
     def heuristic(self):
         green_score = sum(row.count(3) for row in self.world) + sum(row.count(1) for row in self.world)

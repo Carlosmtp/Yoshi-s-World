@@ -1,8 +1,9 @@
 import pygame
 import os
+import re
 
 class GameGUI:
-    def __init__(self, game=None):
+    def __init__(self, game=None, difficulty=None):
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.init()
         self.empty = pygame.transform.scale(pygame.image.load('images/empty_tile.png'), (80, 80))
@@ -19,8 +20,11 @@ class GameGUI:
         self.pos_enemigo = None
         self.game = game
         self.current_cursor = None
-        text_font = pygame.font.Font(None, 40)
-        self.title = text_font.render("¡No hay movimientos posibles!", True, (0, 255, 0))
+        self.text_font = pygame.font.Font(None, 40)
+        self.difficulty = self.text_font.render("Dificultad: " + difficulty, True, (255, 255, 255))
+        self.status = self.text_font.render("¡No hay movimientos posibles!", True, (255, 255, 255))
+        self.player_score = self.text_font.render("Jugador: 0", True, (255, 255, 255))
+        self.enemy_score = self.text_font.render("Enemigo: 0", True, (255, 255, 255))
         
             
     def get_possible_moves(self, pos):
@@ -89,9 +93,7 @@ class GameGUI:
             # Dibujar movimientos posibles si el mouse está sobre ellos
             mouse_pos = pygame.mouse.get_pos()
             if possible_moves == []:
-                self.screen.blit(self.title, (700, 150))
-                
-                self.game.move_enemy(self.game.minimax(self.game.difficulty, False)[1])
+                self.screen.blit(self.status, (700, 550))
             for move in possible_moves:
                 move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
                 if move_rect.collidepoint(mouse_pos):
@@ -112,4 +114,10 @@ class GameGUI:
                         if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
                             pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 1) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
                             pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 2) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
+            self.screen.blit(self.difficulty, (700, 150))
+            self.game.update_scores()
+            self.player_score = self.text_font.render("Jugador: " + str(self.game.player_score), True, (255, 255, 255))
+            self.enemy_score = self.text_font.render("Enemigo: " + str(self.game.enemy_score), True, (255, 255, 255))
+            self.screen.blit(self.player_score, (700, 250))
+            self.screen.blit(self.enemy_score, (700, 300))
             pygame.display.flip()
