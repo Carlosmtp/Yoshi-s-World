@@ -33,9 +33,9 @@ class Game:
         self.enemy_score = sum(row.count(4) for row in self.world) + sum(row.count(2) for row in self.world)
                     
     def heuristic(self):
-        green_score = sum(row.count(3) for row in self.world) + sum(row.count(1) for row in self.world)
-        red_score = sum(row.count(4) for row in self.world) + sum(row.count(2) for row in self.world)
-        return green_score - red_score
+        red_score = sum(row.count(3) for row in self.world) + sum(row.count(1) for row in self.world)
+        green_score = sum(row.count(4) for row in self.world) + sum(row.count(2) for row in self.world)
+        return red_score - green_score
     
     def get_possible_moves(self, pos):
         posible_moves = []
