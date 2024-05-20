@@ -33,8 +33,8 @@ class GameGUI:
         self.restart = self.text_font.render("Reiniciar:", True, (255, 255, 255))
         self.restart_button_color = (155, 196, 188)
         self.restart_button_new_color = (155, 196, 188)
-        self.restart_button_text = self.small_font.render("mismas posiciones", True, (0, 0, 0))
-        self.restart_button_new_game = self.small_font.render("nuevas posiciones", True, (0, 0, 0))
+        self.restart_button_text = self.small_font.render("mismas posiciones", True, (34, 31, 28))
+        self.restart_button_new_game = self.small_font.render("nuevas posiciones", True, (34, 31, 28))
         self.is_player_turn = True  # Booleano para controlar el turno
 
     def move_player_gui(self, move):
@@ -71,12 +71,16 @@ class GameGUI:
                         self.is_player_turn = True
                         break
                     elif self.is_player_turn:
+                        self.restart_button_color = (34, 31, 28)
+                        self.restart_button_new_color = (34, 31, 28)
                         self.move_player_gui(self.current_cursor)
                         break
                 if event.type == pygame.MOUSEBUTTONUP:
                     if not self.is_player_turn:
                         time.sleep(2)
                         self.move_enemy_gui()
+                        self.restart_button_color = (155, 196, 188)
+                        self.restart_button_new_color = (155, 196, 188)
                         break
                 if event.type == pygame.MOUSEMOTION:
                     if self.restart_button.collidepoint(event.pos):
