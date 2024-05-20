@@ -23,17 +23,31 @@ class GameGUI:
         self.title = text_font.render("¡No hay movimientos posibles!", True, (0, 255, 0))
         
             
-    def get_posible_moves(self):
+    def get_possible_moves(self, pos):
         posible_moves = []
-        if self.pos_jugador is not None:
-            i, j = self.pos_jugador
+        if pos is not None:
+            i, j = pos
             moves = [(i+2, j+1), (i+2, j-1), (i-2, j+1), (i-2, j-1),
                      (i+1, j+2), (i+1, j-2), (i-1, j+2), (i-1, j-2)]
             for move in moves:
-                if 0 <= move[0] < 8 and 0 <= move[1] < 8 and self.game[move[0]][move[1]] == 0:
+                if 0 <= move[0] < 8 and 0 <= move[1] < 8 and self.game.world[move[0]][move[1]] == 0:
                     posible_moves.append(move)
         return posible_moves
     
+    def move_player_gui(self, move):
+        mouse_pos = pygame.mouse.get_pos()
+        for move in self.game.get_possible_moves(self.pos_jugador):
+            move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
+            if move_rect.collidepoint(mouse_pos):
+                self.game.move_player(move)
+                self.current_cursor = move
+    
+    def move_enemy_gui(self):
+        enemy_move = self.game.minimax(self.game.difficulty, False)[1]
+        if enemy_move is not None:
+            self.game.move_enemy(self.game.minimax(self.game.difficulty, False)[1])
+    
+
     def draw_board(self):
         while True:
             pygame.display.set_caption('Yoshi\'s world')
@@ -42,16 +56,9 @@ class GameGUI:
                     pygame.quit()
                     return
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_pos = pygame.mouse.get_pos()
-                    for move in self.get_posible_moves():
-                        move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
-                        if move_rect.collidepoint(mouse_pos):
-                            self.game[self.pos_jugador[0]][self.pos_jugador[1]] = 3
-                            self.game[move[0]][move[1]] = 1
-                            self.pos_jugador = (move[0], move[1])
-                            self.current_cursor = move
-                            break
-                            
+                    self.move_player_gui(self.current_cursor)
+                    self.move_enemy_gui()
+                    break
 
             self.screen.fill((255, 255, 255))
             for i in range(8):
@@ -59,31 +66,33 @@ class GameGUI:
                     if j>7:
                         self.screen.blit(self.background, (j * 80, i * 80))
                     else:
-                        if self.game[i][j] == 0:
+                        if self.game.world[i][j] == 0:
                             self.screen.blit(self.empty, (j * 80, i * 80))
-                        elif self.game[i][j] == 1:
+                        elif self.game.world[i][j] == 1:
                             self.pos_jugador = (i, j)
                             self.screen.blit(self.green_yoshi, (j * 80, i * 80))
-                        elif self.game[i][j] == 2:
+                        elif self.game.world[i][j] == 2:
                             self.pos_enemigo = (i, j)
                             self.screen.blit(self.red_yoshi, (j * 80, i * 80))
-                        elif self.game[i][j] == 2:
+                        elif self.game.world[i][j] == 2:
                             self.screen.blit(self.red_yoshi, (j * 80, i * 80))
-                        elif self.game[i][j] == 3:
+                        elif self.game.world[i][j] == 3:
                             self.screen.blit(self.green_tile, (j * 80, i * 80))
-                        elif self.game[i][j] == 4:
+                        elif self.game.world[i][j] == 4:
                             self.screen.blit(self.red_tile, (j * 80, i * 80))
             self.screen.blit(self.main_title, (700, 30))
 
             
             # Obtener movimientos posibles
-            posible_moves = self.get_posible_moves()
+            possible_moves = self.game.get_possible_moves(self.pos_jugador)
             
             # Dibujar movimientos posibles si el mouse está sobre ellos
             mouse_pos = pygame.mouse.get_pos()
-            if posible_moves == []:
+            if possible_moves == []:
                 self.screen.blit(self.title, (700, 150))
-            for move in posible_moves:
+                
+                self.game.move_enemy(self.game.minimax(self.game.difficulty, False)[1])
+            for move in possible_moves:
                 move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
                 if move_rect.collidepoint(mouse_pos):
                     self.screen.blit(self.brush_tile, (move[1] * 80, move[0] * 80))

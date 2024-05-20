@@ -1,4 +1,5 @@
 import tkinter as tk
+import re
 from PIL import Image, ImageTk
 from models.GameGUI import GameGUI
 from models.Game import Game
@@ -44,8 +45,10 @@ class GUI:
         
     def play_game(self):
         self.master.withdraw()
-        game = Game()
-        game = GameGUI(game.world)
+        difficulty = int(re.search(r'\d+', self.dificultad_var.get()).group(0))
+        game = Game(difficulty)
+        print(game.difficulty)
+        game = GameGUI(game)
         self.master.withdraw()
         game.draw_board()
         self.master.deiconify()
