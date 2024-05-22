@@ -32,7 +32,7 @@ class GUI:
         # Crear selector de dificultad
         self.dificultad_var = tk.StringVar(master)
         self.dificultad_var.set("Seleccionar La Dificultad")
-        self.dificultad_menu = tk.OptionMenu(master, self.dificultad_var, "Principiante (profundidad 2)", "Intermedio (profundidad 4)", "Avanzado (profundidad 6)", command=self.enable_play_button)
+        self.dificultad_menu = tk.OptionMenu(master, self.dificultad_var, "Principiante (profundidad 2)", "Intermedio (profundidad 4)", "Avanzado (profundidad 6)", "(profundidad 8)", command=self.enable_play_button)
         self.dificultad_menu.place(x=600, y=200)
         
         # Botón para iniciar el juego

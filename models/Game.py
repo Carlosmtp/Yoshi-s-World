@@ -27,15 +27,30 @@ class Game:
                 else:
                     self.world[i][j] = 0
                     
-                    
     def update_scores(self):
         self.player_score = sum(row.count(3) for row in self.world) + sum(row.count(1) for row in self.world)
         self.enemy_score = sum(row.count(4) for row in self.world) + sum(row.count(2) for row in self.world)
                     
     def heuristic(self):
-        red_score = sum(row.count(3) for row in self.world) + sum(row.count(1) for row in self.world)
-        green_score = sum(row.count(4) for row in self.world) + sum(row.count(2) for row in self.world)
-        return red_score - green_score
+        player_controlled = sum(row.count(1) for row in self.world) + sum(row.count(3) for row in self.world)
+        enemy_controlled = sum(row.count(2) for row in self.world) + sum(row.count(4) for row in self.world)
+
+        player_possible_moves = len(self.get_possible_moves(self.player_pos))
+        enemy_possible_moves = len(self.get_possible_moves(self.enemy_pos))
+
+        player_distance_to_enemy = self.manhattan_distance(self.player_pos, self.enemy_pos)
+
+
+        heuristic_value = (player_controlled - enemy_controlled) * 10
+        heuristic_value += (player_possible_moves - enemy_possible_moves) * 5
+        heuristic_value -= player_distance_to_enemy
+        heuristic_value += self.player_score - self.enemy_score
+        return heuristic_value
+
+    def manhattan_distance(self, pos1, pos2):
+        return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
+    
+    
     
     def get_possible_moves(self, pos):
         posible_moves = []
@@ -84,5 +99,5 @@ class Game:
             return best_score, best_move
         
     def is_game_over(self):
-        return not self.get_possible_moves(self.player_pos) or not self.get_possible_moves(self.enemy_pos)
+        return self.get_possible_moves(self.player_pos) == self.get_possible_moves(self.enemy_pos) == []
 
