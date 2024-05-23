@@ -184,6 +184,9 @@ class GameGUI:
             elif self.game.get_possible_moves(self.pos_enemigo) == [] and self.game.get_possible_moves(self.pos_jugador) != []:
                 self.status = self.text_font.render("Enemigo sin movimientos, pasando turno...", True, (255, 255, 255))
                 self.screen.blit(self.status, (680, 400))
+                self.draw_actual_turn(True)
+                pygame.display.flip()
+                time.sleep(1)
                 self.is_player_turn = True
             elif self.game.get_possible_moves(self.pos_jugador) == [] and self.game.get_possible_moves(self.pos_enemigo) != []:
                 self.status = self.text_font.render("Jugador sin movimientos, pasando turno...", True, (255, 255, 255))
