@@ -1,4 +1,5 @@
 import tkinter as tk
+import re
 from PIL import Image, ImageTk
 from models.GameGUI import GameGUI
 from models.Game import Game
@@ -31,7 +32,7 @@ class GUI:
         # Crear selector de dificultad
         self.dificultad_var = tk.StringVar(master)
         self.dificultad_var.set("Seleccionar La Dificultad")
-        self.dificultad_menu = tk.OptionMenu(master, self.dificultad_var, "Principiante (profundidad 2)", "Intermedio (profundidad 4)", "Avanzado (profundidad 6)", command=self.enable_play_button)
+        self.dificultad_menu = tk.OptionMenu(master, self.dificultad_var, "Principiante (profundidad 2)", "Amateur (profundidad 4)", "Experto (profundidad 6)", command=self.enable_play_button)
         self.dificultad_menu.place(x=600, y=200)
         
         # Botón para iniciar el juego
@@ -44,8 +45,8 @@ class GUI:
         
     def play_game(self):
         self.master.withdraw()
-        game = Game()
-        game = GameGUI(game.world)
+        game = Game(int(re.search(r'\d+', self.dificultad_var.get()).group(0)))
+        game = GameGUI(game, self.dificultad_var.get())
         self.master.withdraw()
         game.draw_board()
         self.master.deiconify()
