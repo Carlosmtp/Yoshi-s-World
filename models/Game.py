@@ -14,8 +14,8 @@ class Game:
             self.initial_enemy_pos = random.randrange(8), random.randrange(8)
         self.player_pos = self.initial_player_pos
         self.enemy_pos = self.initial_enemy_pos
-        self.player_score = 0
-        self.enemy_score = 0    
+        self.player_score = 1
+        self.enemy_score = 1    
         while self.player_pos == self.enemy_pos:
             self.enemy_pos = random.randrange(8), random.randrange(8)
         for i in range(8):
@@ -40,17 +40,17 @@ class Game:
 
         player_distance_to_enemy = self.manhattan_distance(self.player_pos, self.enemy_pos)
 
-
-        heuristic_value = (player_controlled - enemy_controlled) * 10
-        heuristic_value += (player_possible_moves - enemy_possible_moves) * 5
-        heuristic_value -= player_distance_to_enemy
-        heuristic_value += self.player_score - self.enemy_score
+        if player_possible_moves == 0:
+            return float('-inf')  # Estado desfavorable para el jugador
+        if enemy_possible_moves == 0:
+            return float('inf')   # Estado favorable para el jugador
+        heuristic_value = (player_controlled - enemy_controlled) * 2
+        heuristic_value += (player_possible_moves - enemy_possible_moves) * 10
+        heuristic_value -= player_distance_to_enemy * 5
         return heuristic_value
 
     def manhattan_distance(self, pos1, pos2):
         return abs(pos1[0] - pos2[0]) + abs(pos1[1] - pos2[1])
-    
-    
     
     def get_possible_moves(self, pos):
         posible_moves = []

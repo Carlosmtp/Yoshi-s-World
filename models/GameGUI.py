@@ -43,6 +43,8 @@ class GameGUI:
         self.is_player_turn = False  # Booleano para controlar el turno
 
     def move_player_gui(self, move):
+        if not self.is_player_turn:  # Verificar si es el turno del jugador
+            return
         mouse_pos = pygame.mouse.get_pos()
         for move in self.game.get_possible_moves(self.pos_jugador):
             move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
@@ -59,15 +61,86 @@ class GameGUI:
         else:
             self.is_player_turn = True
     
-
+    def update_board(self):
+        for i in range(8):
+            for j in range(16):
+                if j > 7:
+                    self.screen.blit(self.background, (j * 80, i * 80))
+                else:
+                    if self.game.world[i][j] == 0:
+                        self.screen.blit(self.empty, (j * 80, i * 80))
+                    elif self.game.world[i][j] == 1:
+                        self.pos_jugador = (i, j)
+                        self.screen.blit(self.red_yoshi, (j * 80, i * 80))
+                    elif self.game.world[i][j] == 2:
+                        self.pos_enemigo = (i, j)
+                        self.screen.blit(self.green_yoshi, (j * 80, i * 80))
+                    elif self.game.world[i][j] == 3:
+                        self.screen.blit(self.red_tile, (j * 80, i * 80))
+                    elif self.game.world[i][j] == 4:
+                        self.screen.blit(self.green_tile, (j * 80, i * 80))
+        self.screen.blit(self.main_title, (700, 30))
+        self.screen.blit(self.difficulty, (700, 110))
+    
+    def update_scores(self):
+        self.player_score = self.text_font.render("Jugador: " + str(self.game.player_score), True, (255, 255, 255))
+        self.enemy_score = self.text_font.render("Enemigo: " + str(self.game.enemy_score), True, (255, 255, 255))
+        self.screen.blit((pygame.transform.scale(pygame.image.load('images/red_yoshi.png'), (30, 30))), (700, 256))
+        self.screen.blit((pygame.transform.scale(pygame.image.load('images/green_yoshi.png'), (30, 30))), (1000, 256))
+        self.screen.blit(self.player_score, (740, 260))
+        self.screen.blit(self.enemy_score, (1040, 260))
+        
+    def draw_actual_turn(self, player):
+        if player:
+            pygame.draw.rect(self.screen, (255,0,0), (680,180,240,130), 5)
+            self.screen.blit(self.turn_text, (700, 200))
+        else:
+            pygame.draw.rect(self.screen, (0,255,0), (980,180,240,130), 5)
+            self.screen.blit(self.turn_text, (1000, 200))
+            
+    def possible_moves_hover(self, possible_moves):
+        mouse_pos = pygame.mouse.get_pos()
+        if self.is_player_turn:
+            for move in possible_moves:
+                move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
+                if move_rect.collidepoint(mouse_pos):
+                    self.screen.blit(self.brush_tile, (move[1] * 80, move[0] * 80))
+                    if move[0] < self.pos_jugador[0]:
+                        if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] - 1) * 80 + 40), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] - 2) * 80 + 40), 20)
+                    elif move[0] > self.pos_jugador[0]:
+                        if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] + 1) * 80 + 40), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] + 2) * 80 + 40), 20)
+                    if move[1] < self.pos_jugador[1]:
+                        if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] - 1) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] - 2) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
+                    elif move[1] > self.pos_jugador[1]:
+                        if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 1) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
+                            pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 2) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
+            
+            
     def draw_board(self):
         while True:
+            if self.game.enemy_score == self.game.player_score == 1:
+                self.update_board()
+                self.update_scores()
+                self.draw_actual_turn(False)
+                pygame.display.flip()
             pygame.display.set_caption('Yoshi\'s world')
+            if self.is_player_turn == False:
+                time.sleep(1)
+                self.move_enemy_gui()
+                pygame.event.clear()
+                self.is_player_turn = True
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     return
-                if self.is_player_turn:
+                if (self.is_player_turn and self.game.get_possible_moves(self.pos_jugador) != []) or self.game.is_game_over() == True:
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if self.restart_button_same.collidepoint(event.pos):
                             self.game = Game(self.game.difficulty, self.game.player_pos, self.game.enemy_pos)
@@ -99,83 +172,28 @@ class GameGUI:
                             self.restart_button_new_color = (211, 255, 233)
                         else:
                             self.restart_button_new_color = (155, 196, 188)
-                elif self.is_player_turn == False:
-                    time.sleep(1)
-                    self.move_enemy_gui()
-                    self.is_player_turn = True
-                    #pygame.draw.rect(self.screen, (255,0,0), (680,180,240,130), 5)
-                    #self.screen.blit(self.turn_text, (700, 200))
                     
-            self.screen.fill((255, 255, 255))
-            for i in range(8):
-                for j in range(16):
-                    if j > 7:
-                        self.screen.blit(self.background, (j * 80, i * 80))
-                    else:
-                        if self.game.world[i][j] == 0:
-                            self.screen.blit(self.empty, (j * 80, i * 80))
-                        elif self.game.world[i][j] == 1:
-                            self.pos_jugador = (i, j)
-                            self.screen.blit(self.red_yoshi, (j * 80, i * 80))
-                        elif self.game.world[i][j] == 2:
-                            self.pos_enemigo = (i, j)
-                            self.screen.blit(self.green_yoshi, (j * 80, i * 80))
-                        elif self.game.world[i][j] == 3:
-                            self.screen.blit(self.red_tile, (j * 80, i * 80))
-                        elif self.game.world[i][j] == 4:
-                            self.screen.blit(self.green_tile, (j * 80, i * 80))
-            self.screen.blit(self.main_title, (700, 30))
-
-            # Obtener movimientos posibles
+            self.update_board()
             possible_moves = self.game.get_possible_moves(self.pos_jugador)
-
-            # Dibujar movimientos posibles si el mouse está sobre ellos
-            mouse_pos = pygame.mouse.get_pos()
-            if self.is_player_turn:
-                for move in possible_moves:
-                    move_rect = pygame.Rect(move[1] * 80, move[0] * 80, 80, 80)
-                    if move_rect.collidepoint(mouse_pos):
-                        self.screen.blit(self.brush_tile, (move[1] * 80, move[0] * 80))
-                        if move[0] < self.pos_jugador[0]:
-                            if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
-                                pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] - 1) * 80 + 40), 20)
-                                pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] - 2) * 80 + 40), 20)
-                        elif move[0] > self.pos_jugador[0]:
-                            if move[1] > self.pos_jugador[1] - 2 and move[1] < self.pos_jugador[1] + 2:
-                                pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] + 1) * 80 + 40), 20)
-                                pygame.draw.circle(self.screen, (201, 201, 201), (self.pos_jugador[1] * 80 + 40, (self.pos_jugador[0] + 2) * 80 + 40), 20)
-                        if move[1] < self.pos_jugador[1]:
-                            if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
-                                pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] - 1) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
-                                pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] - 2) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
-                        elif move[1] > self.pos_jugador[1]:
-                            if move[0] > self.pos_jugador[0] - 2 and move[0] < self.pos_jugador[0] + 2:
-                                pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 1) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
-                                pygame.draw.circle(self.screen, (201, 201, 201), ((self.pos_jugador[1] + 2) * 80 + 40, self.pos_jugador[0] * 80 + 40), 20)
-            self.screen.blit(self.difficulty, (700, 110))
+            self.possible_moves_hover(possible_moves)
             self.game.update_scores()
-            self.player_score = self.text_font.render("Jugador: " + str(self.game.player_score), True, (255, 255, 255))
-            self.enemy_score = self.text_font.render("Enemigo: " + str(self.game.enemy_score), True, (255, 255, 255))
-            self.screen.blit((pygame.transform.scale(pygame.image.load('images/red_yoshi.png'), (30, 30))), (700, 256))
-            self.screen.blit((pygame.transform.scale(pygame.image.load('images/green_yoshi.png'), (30, 30))), (1000, 256))
+            self.update_scores()
             if self.is_player_turn and self.game.get_possible_moves(self.pos_jugador) != []:
-                pygame.draw.rect(self.screen, (255,0,0), (680,180,240,130), 5)
-                self.screen.blit(self.turn_text, (700, 200))
+                self.draw_actual_turn(True)
             elif not self.is_player_turn and self.game.get_possible_moves(self.pos_enemigo) != []:
-                pygame.draw.rect(self.screen, (0,255,0), (980,180,240,130), 5)
-                self.screen.blit(self.turn_text, (1000, 200))
+                self.draw_actual_turn(False)
             elif self.game.get_possible_moves(self.pos_enemigo) == [] and self.game.get_possible_moves(self.pos_jugador) != []:
                 self.status = self.text_font.render("Enemigo sin movimientos, pasando turno...", True, (255, 255, 255))
                 self.screen.blit(self.status, (680, 400))
             elif self.game.get_possible_moves(self.pos_jugador) == [] and self.game.get_possible_moves(self.pos_enemigo) != []:
                 self.status = self.text_font.render("Jugador sin movimientos, pasando turno...", True, (255, 255, 255))
-                self.is_player_turn = False
                 self.screen.blit(self.status, (680, 400))
+                self.is_player_turn = False
             elif self.game.is_game_over:
-                print("Juego terminado")
                 self.status = self.text_font.render("¡Juego terminado!", True, (255, 255, 255))
-            self.screen.blit(self.player_score, (740, 260))
-            self.screen.blit(self.enemy_score, (1040, 260))
+                self.is_player_turn = True
+                self.screen.blit(self.status, (680, 400))
+            self.update_scores()
             self.screen.blit(self.restart, (680, 480))
             pygame.draw.rect(self.screen, self.restart_button_color, (680, 550, 165, 50))
             self.screen.blit(self.restart_button_text, (685, 565))
