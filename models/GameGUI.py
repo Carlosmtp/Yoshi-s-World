@@ -40,10 +40,10 @@ class GameGUI:
         self.restart_button_text = self.small_font.render("posiciones actuales", True, (34, 31, 28))
         self.restart_button_same_text = self.small_font.render("posiciones iniciales", True, (34, 31, 28))
         self.restart_button_new_game = self.small_font.render("nuevas posiciones", True, (34, 31, 28))
-        self.is_player_turn = False  # Booleano para controlar el turno
+        self.is_player_turn = False 
 
     def move_player_gui(self, move):
-        if not self.is_player_turn:  # Verificar si es el turno del jugador
+        if not self.is_player_turn:
             return
         mouse_pos = pygame.mouse.get_pos()
         for move in self.game.get_possible_moves(self.pos_jugador):
@@ -51,13 +51,13 @@ class GameGUI:
             if move_rect.collidepoint(mouse_pos):
                 self.game.move_player(move)
                 self.current_cursor = move
-                self.is_player_turn = False  # Cambia el turno al enemigo
+                self.is_player_turn = False
 
     def move_enemy_gui(self):
         enemy_move = self.game.minimax(self.game.difficulty, False)[1]
         if enemy_move is not None:
             self.game.move_enemy(enemy_move)
-            self.is_player_turn = True  # Cambia el turno al jugador
+            self.is_player_turn = True
         else:
             self.is_player_turn = True
     

@@ -41,9 +41,9 @@ class Game:
         player_distance_to_enemy = self.manhattan_distance(self.player_pos, self.enemy_pos)
 
         if player_possible_moves == 0:
-            return float('-inf')  # Estado desfavorable para el jugador
+            return float('-inf')
         if enemy_possible_moves == 0:
-            return float('inf')   # Estado favorable para el jugador
+            return float('inf') 
         heuristic_value = (player_controlled - enemy_controlled) * 2
         heuristic_value += (player_possible_moves - enemy_possible_moves) * 10
         heuristic_value -= player_distance_to_enemy * 5
@@ -78,12 +78,12 @@ class Game:
         
     def minimax(self, depth, player):
         if depth == 0 or self.is_game_over():
-            return self.heuristic(), None  # Devuelve la puntuación y None como movimiento
+            return self.heuristic(), None
         if player:
             best_score = float('-inf')
             best_move = None
             for move in self.get_possible_moves(self.player_pos):
-                score, _ = self.minimax(depth-1, not player)  # Ignora el movimiento retornado
+                score, _ = self.minimax(depth-1, not player)
                 if score > best_score:
                     best_score = score
                     best_move = move
@@ -92,7 +92,7 @@ class Game:
             best_score = float('inf')
             best_move = None
             for move in self.get_possible_moves(self.enemy_pos):
-                score, _ = self.minimax(depth-1, not player)  # Ignora el movimiento retornado
+                score, _ = self.minimax(depth-1, not player)
                 if score < best_score:
                     best_score = score
                     best_move = move
