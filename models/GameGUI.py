@@ -32,11 +32,9 @@ class GameGUI:
         self.restart_button_same = pygame.Rect(680, 550, 165, 50)
         self.restart_button_initial = pygame.Rect(880, 550, 165, 50)
         self.restart_button_new = pygame.Rect(1080, 550, 165, 50)
-        self.restart = pygame.Surface(self.text_font.render("Reiniciar:", True, (255, 255, 255)).get_size(), pygame.SRCALPHA);self.restart.blit(self.text_font.render("Reiniciar:", True, (255, 255, 255)), (0, 0));self.restart_button_color = (155, 196, 188)
         self.restart_button_new_color = (155, 196, 188)
         self.restart_button_color = (155, 196, 188)
         self.restart_button_same_color = (155, 196, 188)
-        self.buttons_state = True
         self.restart_button_text = self.small_font.render("posiciones actuales", True, (34, 31, 28))
         self.restart_button_same_text = self.small_font.render("posiciones iniciales", True, (34, 31, 28))
         self.restart_button_new_game = self.small_font.render("nuevas posiciones", True, (34, 31, 28))
@@ -194,7 +192,6 @@ class GameGUI:
                 self.is_player_turn = True
                 self.screen.blit(self.status, (680, 400))
             self.update_scores()
-            self.screen.blit(self.restart, (680, 480))
             pygame.draw.rect(self.screen, self.restart_button_color, (680, 550, 165, 50))
             self.screen.blit(self.restart_button_text, (685, 565))
             pygame.draw.rect(self.screen, self.restart_button_same_color, (880, 550, 165, 50))
