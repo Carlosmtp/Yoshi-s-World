@@ -77,10 +77,8 @@ class Game:
         self.enemy_pos = move
 
     def clone(self):
-        clone_game = Game(self.difficulty)
+        clone_game = Game(self.difficulty, self.player_pos, self.enemy_pos)
         clone_game.world = copy.deepcopy(self.world)
-        clone_game.player_pos = self.player_pos
-        clone_game.enemy_pos = self.enemy_pos
         clone_game.player_score = self.player_score
         clone_game.enemy_score = self.enemy_score
         return clone_game
