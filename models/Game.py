@@ -41,13 +41,14 @@ class Game:
 
         player_distance_to_enemy = self.manhattan_distance(self.player_pos, self.enemy_pos)
 
+        heuristic_value = (player_controlled - enemy_controlled) * 0.3
         if player_possible_moves == 0:
-            return float('-inf')
-        if enemy_possible_moves == 0:
-            return float('inf')
-        heuristic_value = (player_controlled - enemy_controlled) * 3
-        heuristic_value += (player_possible_moves - enemy_possible_moves) * 8
-        heuristic_value -= player_distance_to_enemy * 4
+            heuristic_value += -5.0
+        elif enemy_possible_moves == 0:
+            heuristic_value += 5.0
+        else:
+            heuristic_value += (player_possible_moves - enemy_possible_moves) * 0.6
+        heuristic_value -= player_distance_to_enemy * 0.1
         return heuristic_value
 
     def manhattan_distance(self, pos1, pos2):
@@ -79,8 +80,7 @@ class Game:
     def clone(self):
         clone_game = Game(self.difficulty, self.player_pos, self.enemy_pos)
         clone_game.world = copy.deepcopy(self.world)
-        clone_game.player_score = self.player_score
-        clone_game.enemy_score = self.enemy_score
+        clone_game.update_scores()
         return clone_game
 
     def minimax(self, depth, player):
